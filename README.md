@@ -50,6 +50,26 @@ For **Fedora**: You can install them with the following command
 sudo dnf install kernel-headers kernel-devel
 sudo dnf group install "C Development Tools and Libraries"
 ```
+For **Rocky Linux 10 / RHEL 10**: You can install them with the following command
+```bash
+sudo dnf install kernel-headers kernel-devel
+sudo dnf group install "C Development Tools and Libraries"
+```
+
+> **Rocky Linux 10 known issue — firmware decompression**
+>
+> The kernel in Rocky Linux 10 (6.12.x el10) cannot decompress `.xz` firmware files at runtime,
+> causing the driver to fail silently with `decompression failed with status 6` in dmesg.
+> After running `sudo make install`, manually decompress the firmware:
+>
+> ```bash
+> cd /lib/firmware/rtw89
+> sudo xz -dk rtw8922a_fw.bin.xz rtw8922a_fw-1.bin.xz rtw8922a_fw-2.bin.xz rtw8922a_fw-3.bin.xz rtw8922a_fw-4.bin.xz
+> ```
+>
+> Then reboot. The kernel will find the uncompressed `.bin` files and load correctly.
+> Note: this step must be repeated after a `linux-firmware` package update (which replaces the `.bin` files with fresh `.xz` ones).
+
 For **openSUSE**: Install necessary headers with
 ```bash
 sudo zypper install make gcc kernel-devel kernel-default-devel git libopenssl-devel
